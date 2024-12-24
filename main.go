@@ -32,12 +32,12 @@ func faq(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var err error
-	homeTemplate, err = template.ParseFiles("views/home.gohtml")
+	homeTemplate, err = template.ParseFiles("views/home.gohtml", "layouts/footer.gohtml")
 	if err != nil {
 		panic(err)
 	}
 
-	contactPage, err = template.ParseFiles("views/contact.gohtml")
+	contactPage, err = template.ParseFiles("views/contact.gohtml", "layouts/footer.gohtml")
 	if err != nil {
 		panic(err)
 	}
