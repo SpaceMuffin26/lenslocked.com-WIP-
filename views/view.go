@@ -2,12 +2,14 @@ package views
 
 import (
 	"html/template"
+	"net/http"
 	"path/filepath"
 )
 
 var LayoutDir string = "views/layouts/"
 var TemplateExt string = ".gohtml"
 
+// dynamically writes the file paths for you so you dont have to manualy connect all html
 func layoutFiles() []string {
 	files, err := filepath.Glob(LayoutDir + "*" + TemplateExt)
 	if err != nil {
@@ -32,4 +34,9 @@ func NewView(layout string, files ...string) *View {
 type View struct {
 	Template *template.Template
 	Layout   string
+}
+
+// executeing the template
+func (v *View) Render(w http.ResponseWriter, data interface{}) error {
+	return v.Template.ExecuteTemplate(w, v.Layout, data)
 }
