@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"lenslocked.com/views"
@@ -10,6 +11,10 @@ func NewUsers() *Users {
 	return &Users{
 		NewView: views.NewView("bootstrap", "views/users/new.gohtml"),
 	}
+}
+
+func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "this is a temporary response.")
 }
 
 type Users struct {
