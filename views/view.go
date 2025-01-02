@@ -7,6 +7,7 @@ import (
 )
 
 var LayoutDir string = "views/layouts/"
+var TemplateDir string = "views/"
 var TemplateExt string = ".gohtml"
 
 // dynamically writes the file paths for you so you dont have to manualy connect all html
@@ -18,7 +19,21 @@ func layoutFiles() []string {
 	return files
 }
 
+func addTemplatePath(files []string) {
+	for i, f := range files {
+		files[i] = TemplateDir + f
+	}
+}
+
+func addTemplateExt(files []string) {
+	for i, f := range files {
+		files[i] = f + TemplateExt
+	}
+}
+
 func NewView(layout string, files ...string) *View {
+	addTemplatePath(files)
+	addTemplateExt(files)
 	files = append(files, layoutFiles()...)
 	t, err := template.ParseFiles(files...)
 	if err != nil {
@@ -38,5 +53,12 @@ type View struct {
 
 // executeing the template
 func (v *View) Render(w http.ResponseWriter, data interface{}) error {
+	w.Header().Set("Content-Type", "text/html")
 	return v.Template.ExecuteTemplate(w, v.Layout, data)
+}
+
+func (v *View) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if err := v.Render(w, nil); err != nil {
+		panic(err)
+	}
 }
